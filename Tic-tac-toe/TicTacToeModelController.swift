@@ -14,9 +14,9 @@ class TicTacToe {
         didSet {
             switch gameOver {
             case .XWon:
-                playerTitle == .X ? (totalWins += 1) : (totalLoss += 1)
+                titleUsed == .X ? (totalWins += 1) : (totalLoss += 1)
             case .OWon:
-                playerTitle == .O ? (totalWins += 1) : (totalLoss += 1)
+                titleUsed == .O ? (totalWins += 1) : (totalLoss += 1)
             case .Tie: totalTies += 1
             default: break
             }
