@@ -22,9 +22,9 @@ class TicTacToe {
             }
         }
     }
-    var mode: GameMode
+    private var mode: GameMode
     var playerTitle: Title
-    var titleUsed = Title.X
+    private var titleUsed = Title.X
     var totalWins = 0
     var totalLoss = 0
     var totalTies = 0
@@ -34,10 +34,10 @@ class TicTacToe {
     private var flippedUpButtons: [Button] {
         return buttons.filter({$0.isFacedUp})
     }
-    var xButtons: [Button] {
+    private var xButtons: [Button] {
         return buttons.filter({$0.title == .X})
     }
-    var oButtons: [Button] {
+    private var oButtons: [Button] {
         return buttons.filter({$0.title == .O})
     }
     private var winningCombo = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
@@ -49,7 +49,7 @@ class TicTacToe {
         }
         newGame()
     }
-    func computerMove() {
+    private func computerMove() {
         let unPickedArray = buttons.filter({!$0.isFacedUp}).map({$0.index})
         if unPickedArray.count > 0 {
             let random = Int(arc4random_uniform(UInt32(unPickedArray.count)))
@@ -83,7 +83,6 @@ class TicTacToe {
         }
         return nil
     }
-    private var index = 0
     func isSelected(index: Int) {
         if !buttons[index].isFacedUp {
             buttons[index].title = titleUsed
