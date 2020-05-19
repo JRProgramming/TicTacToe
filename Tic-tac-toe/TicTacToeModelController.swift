@@ -14,17 +14,18 @@ class TicTacToe {
         didSet {
             switch gameOver {
             case .XWon:
-                titleUsed == .X ? (totalWins += 1) : (totalLoss += 1)
+                startingPlayerTitle == .X ? (totalWins += 1) : (totalLoss += 1)
             case .OWon:
-                titleUsed == .O ? (totalWins += 1) : (totalLoss += 1)
+                startingPlayerTitle == .O ? (totalWins += 1) : (totalLoss += 1)
             case .Tie: totalTies += 1
             default: break
             }
         }
     }
     private var mode: GameMode
-    var playerTitle: Title
+    var playerTurnTitle: Title
     private var titleUsed = Title.X
+    private var startingPlayerTitle: Title
     var totalWins = 0
     var totalLoss = 0
     var totalTies = 0
@@ -43,7 +44,8 @@ class TicTacToe {
     private var winningCombo = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
     init(mode: GameMode, playerTitle: Title) {
         self.mode = mode
-        self.playerTitle = playerTitle
+        self.playerTurnTitle = playerTitle
+        self.startingPlayerTitle = playerTitle
         if playerTitle == .O {
             computerMove()
         }
@@ -55,7 +57,7 @@ class TicTacToe {
             let random = Int(arc4random_uniform(UInt32(unPickedArray.count)))
             var playerButtons = [Button]()
             var computerButtons = [Button]()
-            switch playerTitle {
+            switch playerTurnTitle {
             case .X:
                 playerButtons = xButtons
                 computerButtons = oButtons
@@ -75,8 +77,8 @@ class TicTacToe {
         }
     }
     private func strategicMove(button: [Button]) -> Int? {
-        for combo in winningCombo where match(selectedIndex: button.map({$0.index}), comboIndex: combo) == 2 {
-            let buttonIndex = button.map({$0.index})
+        let buttonIndex = button.map({$0.index})
+        for combo in winningCombo where matchCount(selectedIndex: buttonIndex, comboIndex: combo) == 2 {
             for i in combo.indices where !buttonIndex.contains(combo[i]) && !buttons[combo[i]].isFacedUp {
                 return combo[i]
             }
@@ -87,14 +89,14 @@ class TicTacToe {
         if !buttons[index].isFacedUp {
             buttons[index].title = titleUsed
             didWin(buttons: titleUsed == .X ? xButtons : oButtons)
-            titleUsed = titleUsed.flip()
-            playerTitle = playerTitle.flip()
-            if playerTitle == .O && gameOver == nil {
+            titleUsed.flip()
+            playerTurnTitle.flip()
+            if playerTurnTitle == .O && gameOver == nil {
                 computerMove()
             }
         }
     }
-    private func match(selectedIndex: [Int], comboIndex: [Int]) -> Int {
+    private func matchCount(selectedIndex: [Int], comboIndex: [Int]) -> Int {
         var matchCount = 0
         for i in selectedIndex.indices {
             if comboIndex.contains(selectedIndex[i]) {
@@ -107,7 +109,7 @@ class TicTacToe {
         if buttons.count >= 3 {
             for combo in winningCombo {
                 let facedUpIndexes = buttons.map({$0.index})
-                if match(selectedIndex: facedUpIndexes, comboIndex: combo) == 3 {
+                if matchCount(selectedIndex: facedUpIndexes, comboIndex: combo) == 3 {
                     gameOver = titleUsed == .X ? .XWon : .OWon
                     break
                 }
@@ -124,7 +126,8 @@ class TicTacToe {
         }
         gameOver = .none
         titleUsed = .X
-        if playerTitle == .O {
+        playerTurnTitle = startingPlayerTitle
+        if playerTurnTitle == .O {
             computerMove()
         }
     }
@@ -133,11 +136,11 @@ enum Title: String {
     case X
     case O
     case none = ""
-    mutating func flip() -> Title {
+    mutating func flip() {
         switch self {
-        case .X: return .O
-        case .O: return .X
-        case .none: return .none
+        case .X: self = .O
+        case .O: self =  .X
+        case .none: self = .none
         }
     }
 }

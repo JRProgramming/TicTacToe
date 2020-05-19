@@ -21,9 +21,9 @@ class StatController: UIViewController {
     @IBOutlet private weak var TotalTies: UILabel!
     @IBOutlet private weak var TotalGames: UILabel!
     @IBAction private func titleSetting(_ sender: UISegmentedControl) {
-        switch playerTurn {
-        case .X: playerTurn = .O
-        case .O: playerTurn =  .X
+        switch sender.selectedSegmentIndex {
+        case 0: playerTurn = .X
+        case 1: playerTurn = .O
         default: break
         }
     }

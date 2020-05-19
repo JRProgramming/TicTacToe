@@ -29,7 +29,6 @@ class ViewController: UIViewController {
                 message: gameOver == .Tie ? "Tie Game" : "\(gameOver.rawValue) won the game",
                 preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Play Again", style: .default, handler: { Void in
-                self.game.playerTitle = self.gameMode
                 self.game.newGame()
                 self.updateView()
             }))
